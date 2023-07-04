@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class Category extends StatelessWidget {
@@ -35,5 +36,15 @@ class Category extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  getcategory()async{
+    try{
+      var response = await Dio().get("http://testecommerce.equitysofttechnologies.com/category/get");
+      print(response.data);
+
+    }catch(e){print(e);}
+
+
   }
 }
