@@ -53,23 +53,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 return ListTile(
                   title: Text(categorylist[index].categoryName),
                 );
-
-            },),
+              },
+            ),
           )
         ],
       ),
     );
-  }
+  } //ghj
 
-  void getcategory()async{
-    try{
-      var response = await Dio().get("http://testecommerce.equitysofttechnologies.com/category/get");
+  void getcategory() async {
+    try {
+      var response = await Dio()
+          .get("http://testecommerce.equitysofttechnologies.com/category/get");
       print(response.data);
       categoryModel = CategoryModel.fromjson(response.data);
       categorylist = categoryModel.category;
-      setState(() {
-      });
-    }catch(e){
+      setState(() {});
+    } catch (e) {
       print(e);
     }
   }
