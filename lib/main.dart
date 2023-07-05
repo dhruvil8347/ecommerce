@@ -1,7 +1,6 @@
-import 'package:ecommerce/category.dart';
-import 'package:ecommerce/common/textfiled.dart';
-import 'package:ecommerce/company.dart';
-import 'package:ecommerce/productlisting.dart';
+import 'package:ecommerce/category_screen.dart';
+import 'package:ecommerce/company_screen.dart';
+import 'package:ecommerce/productlisting_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -34,58 +33,58 @@ class _MyHomepageState extends State<MyHomepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Home")),
+        title: const Center(child: Text("Home")),
       ),
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Product(),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Product(),));
               },
               child: Container(
                 height: 200,
                 width: 400,
                 color: Colors.orange[200],
-                child: Center(child: Text("Products",style: TextStyle(color: Colors.white,fontSize: 22),)),
+                child: const Center(child: Text("Products",style: TextStyle(color: Colors.white,fontSize: 22),)),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Category(),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryScreen(),));
               },
               child: Container(
                 height: 200,
                 width: 400,
                 color:  Colors.orange[200],
-                child: Center(child: Text("Manage Category",style: TextStyle(color: Colors.white,fontSize: 22),)),
+                child: const Center(child: Text("Manage Category",style: TextStyle(color: Colors.white,fontSize: 22),)),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: (){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => Company(),));
+                Navigator.push(context,MaterialPageRoute(builder: (context) => const CompanyScreen(),));
               },
               child: Container(
                 height: 200,
                 width: 400,
                 color: Colors.orange[200],
-                child: Center(child: Text("Manage Company",style: TextStyle(color: Colors.white,fontSize: 22),)),
+                child: const Center(child: Text("Manage Company",style: TextStyle(color: Colors.white,fontSize: 22),)),
               ),
             ),
 
