@@ -44,7 +44,6 @@ class _CompanyState extends State<CompanyScreen> {
             padding: const EdgeInsets.all(15.0),
             child: TextField(
               controller: nameCtrl,
-
               decoration: InputDecoration(
                   label: const Text("Company Name"),
                   border: OutlineInputBorder(
@@ -55,7 +54,7 @@ class _CompanyState extends State<CompanyScreen> {
               onPressed: () {
                 addcompany();
               },
-              style: ElevatedButton.styleFrom(fixedSize: const Size(350, 45)),
+              style: ElevatedButton.styleFrom(fixedSize: const Size(330, 45)),
               child: const Text("ADD")),
           const Padding(
             padding: EdgeInsets.only(top: 25, right: 220),
@@ -73,46 +72,63 @@ class _CompanyState extends State<CompanyScreen> {
                     height: 50,
                     decoration:BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xFF6D7072),
-
-                    ),
+                        color: Colors.blue),
 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(comapanyList[index].companyName,style: TextStyle(color: Colors.white)),
+                          child: Text(comapanyList[index].companyName,
+                              style: const TextStyle(color: Colors.white)),
                         ),
-                        GestureDetector(
-                            onTap: (){
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text("Delete",style: TextStyle(color: Colors.red)),
-                                      content: Text('Are you sure you want to delete?'),
-                                      actions: [
-                                        TextButton(onPressed: (){}, child: Text("cancel")),
-                                        TextButton(onPressed: (){
-                                          deletecompany(comapanyList[index].id.toString());
-                                        }, child: Text("Delete",style: TextStyle(color: Colors.red),))
-                                      ],
+                        Row(
+                          children: [
+                            GestureDetector(
+                                onTap: () {},
+                                child: const Icon(Icons.edit,
+                                    color: Colors.white)),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text("Delete",
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                          content: const Text(
+                                              'Are you sure you want to delete?'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {},
+                                                child: const Text("cancel")),
+                                            TextButton(
+                                                onPressed: () {
+                                                  deletecompany(
+                                                      comapanyList[index]
+                                                          .id
+                                                          .toString());
+                                                },
+                                                child: const Text(
+                                                  "Delete",
+                                                  style: TextStyle(
+                                                      color: Colors.red),
+                                                ))
+                                          ],
+                                        );
+                                      },
                                     );
-                                  },);
-                              /*deletecompany(comapanyList[index].id.toString());*/
-                            },
-                            child: Row(
-                              children: [
-                                /*Icon(Icons.edit,color: Colors.white),*/
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(Icons.delete,color: Colors.white,),
-                                ),
-
-                              ],
-                            ))
+                                  },
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  )),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -130,25 +146,33 @@ class _CompanyState extends State<CompanyScreen> {
       ),
     );
   }
-  
-  void deletecompany(String id)async{
 
+  void deletecompany(String id) async {
     Map<String, dynamic> body = {'id': id};
 
-    var response = await Dio().post("http://testecommerce.equitysofttechnologies.com/company/delete",data: body);
+    var response = await Dio().post(
+        "http://testecommerce.equitysofttechnologies.com/company/delete",
+        data: body);
+    print(response.data);
+  }
+
+  void editcompany(String id, String text) async {
+    Map<String, dynamic> body = {'id': id, 'text': text};
+
+    var response = await Dio().get(
+        "http://testecommerce.equitysofttechnologies.com/company/update",
+        data: body);
     print(response.data);
   }
 
   void addcompany() async {
     try {
       Map<String, dynamic> body = {'company_name': nameCtrl.text};
-
       var response = await Dio().post(
           "http://testecommerce.equitysofttechnologies.com/company/add",
-         data: body);
-     /* addCompany = CompanyModel.fromJson(response.data);*/
-      setState(() {
-      });
+          data: body);
+      /* addCompany = CompanyModel.fromJson(response.data);*/
+      setState(() {});
       print("dfdff--->${response.data}");
       print(response.statusCode);
     } catch (e) {
@@ -171,7 +195,4 @@ class _CompanyState extends State<CompanyScreen> {
       print(e);
     }
   }
-
-
-
 }

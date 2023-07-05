@@ -11,10 +11,15 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen> {
 
-  TextEditingController nameCtrl = TextEditingController();
+  TextEditingController namecategoryCtrl = TextEditingController();
   CategoryModel categoryModel = CategoryModel();
-  List<Category>  categorylist = [];
+  List<Category> categorylist = [];
 
+  @override
+  void initState() {
+    super.initState();
+    getcategory();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,29 +34,56 @@ class _CategoryScreenState extends State<CategoryScreen> {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: TextField(
+              controller: namecategoryCtrl,
               decoration: InputDecoration(
                   label: const Text("Category"),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))
-              ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
             ),
           ),
-          ElevatedButton(onPressed: (){},
-              style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(350, 45)
-              ),
+          ElevatedButton(
+              onPressed: () {
+                setState(() {});
+                addcategory();
+              },
+              style: ElevatedButton.styleFrom(fixedSize: const Size(320, 45)),
               child: const Text("ADD")),
-
           const Padding(
-            padding: EdgeInsets.only(top: 25,right: 220),
+            padding: EdgeInsets.only(top: 25, right: 220),
             child: Text("List of categories"),
           ),
-
           Expanded(
             child: ListView.builder(
               itemCount: categorylist.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(categorylist[index].categoryName),
+                  title: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(categorylist[index].categoryName,
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.edit, color: Colors.white),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )),
                 );
               },
             ),
@@ -65,7 +97,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
     try {
       var response = await Dio()
           .get("http://testecommerce.equitysofttechnologies.com/category/get");
-      print(response.data);
+      print("dhdhdhdhdhdhdhdhdhdhd================>${response.data}");
+      //category: List<Category>.from((json['r']??[]).map((e)=>Category.fromjson(e)))
+      // categorylist = List<Category>.from(response.data['r'].map((e)=>Category.fromjson(e)));
       categoryModel = CategoryModel.fromjson(response.data);
       categorylist = categoryModel.category;
       setState(() {});
@@ -74,10 +108,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
     }
   }
 
-  /*void addcategory()async{
-    try{
-      var re
-    }catch(e){print(e);}*/
+  void addcategory() async {
+    try {
+      Map<String, dynamic> body = {'category_name': namecategoryCtrl.text};
+      var response = await Dio().post(
+          "http://testecommerce.equitysofttechnologies.com/category/add",
+          data: body);
+      setState(() {});
+      print("dfdff--->${response.data}");
+      print(response.statusCode);
+    } catch (e) {
+      print(e);
+    }
   }
-
-
+}
