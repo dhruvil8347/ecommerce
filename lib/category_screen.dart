@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce/model/category_model.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   TextEditingController namecategoryCtrl = TextEditingController();
   CategoryModel categoryModel = CategoryModel();
   List<Category> categorylist = [];
+  bool isLoding = false;
 
   @override
   void initState() {
@@ -53,33 +55,42 @@ class _CategoryScreenState extends State<CategoryScreen> {
             child: Text("List of categories"),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: categorylist.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+            child: isLoding
+                ? Lottie.asset("assets/lottie/a.json")
+                : ListView.builder(
+                    itemCount: categorylist.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                           Padding(
                             padding: const EdgeInsets.all(15.0),
-                            child: Text(categorylist[index].categoryName,
-                                style: TextStyle(color: Colors.white)),
-                          ),
+                                  child: Text(categorylist[index].categoryName,
+                                      style:
+                                          const TextStyle(color: Colors.white)),
+                                ),
                           Row(
                             children: [
-                              Icon(Icons.edit, color: Colors.white),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
-                              ),
+                                    const Icon(Icons.edit, color: Colors.white),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          deletecategory(
+                                              categorylist[index].id);
+                                        },
+                                        child: const Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
                             ],
                           )
                         ],
@@ -95,6 +106,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   void getcategory() async {
     try {
+      isLoding = true;
       var response = await Dio()
           .get("http://testecommerce.equitysofttechnologies.com/category/get");
       print("dhdhdhdhdhdhdhdhdhdhd================>${response.data}");
@@ -102,7 +114,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
       // categorylist = List<Category>.from(response.data['r'].map((e)=>Category.fromjson(e)));
       categoryModel = CategoryModel.fromjson(response.data);
       categorylist = categoryModel.category;
-      setState(() {});
+      setState(() {
+        isLoding = false;
+      });
     } catch (e) {
       print(e);
     }
@@ -114,9 +128,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
       var response = await Dio().post(
           "http://testecommerce.equitysofttechnologies.com/category/add",
           data: body);
-      setState(() {});
+      setState(() {
+        getcategory();
+      });
       print("dfdff--->${response.data}");
       print(response.statusCode);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void deletecategory(int id) async {
+    try {
+      Map<String, dynamic> body = {'id': id};
+      var response = await Dio().post(
+          "http://testecommerce.equitysofttechnologies.com/category/delete",
+          data: body);
+      print(response.data);
+      setState(() {
+        getcategory();
+      });
     } catch (e) {
       print(e);
     }

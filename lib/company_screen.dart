@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'model/company_model.dart';
-
 
 class CompanyScreen extends StatefulWidget {
   const CompanyScreen({Key? key}) : super(key: key);
@@ -22,11 +22,11 @@ class _CompanyState extends State<CompanyScreen> {
   TextEditingController nameCtrl = TextEditingController();
   CompanyModel companyModel = CompanyModel();
   List<Company> comapanyList = [];
+  bool isLoding = false;
+
   // List<Re> comapany = [];
   // R view = R.fromJson({});
   //List<String> nameList = [];
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,34 +60,38 @@ class _CompanyState extends State<CompanyScreen> {
             padding: EdgeInsets.only(top: 25, right: 220),
             child: Text("List of companies"),
           ),
-
-
           Expanded(
-            child: ListView.builder(
-              itemCount: comapanyList.length,
-              itemBuilder: (context, index) {
-
-                return ListTile(
-                  title: Container(
-                    height: 50,
-                    decoration:BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue),
-
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(comapanyList[index].companyName,
-                              style: const TextStyle(color: Colors.white)),
+            child: isLoding
+                ? Lottie.asset("assets/lottie/a.json")
+                : ListView.builder(
+                    itemCount: comapanyList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blue),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                            child: Text(comapanyList[index]!.companyName,
+                                    style:
+                                        const TextStyle(color: Colors.white)),
                         ),
                         Row(
                           children: [
                             GestureDetector(
-                                onTap: () {},
-                                child: const Icon(Icons.edit,
-                                    color: Colors.white)),
+                                      onTap: () {
+                                        editcompany(
+                                            comapanyList[index].id,
+                                            nameCtrl.text = comapanyList[index]
+                                                .companyName);
+                                      },
+                                      child: const Icon(Icons.edit,
+                                          color: Colors.white)),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: GestureDetector(
@@ -103,15 +107,18 @@ class _CompanyState extends State<CompanyScreen> {
                                               'Are you sure you want to delete?'),
                                           actions: [
                                             TextButton(
-                                                onPressed: () {},
-                                                child: const Text("cancel")),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child:
+                                                          const Text("cancel")),
                                             TextButton(
                                                 onPressed: () {
                                                   deletecompany(
-                                                      comapanyList[index]
-                                                          .id
-                                                          .toString());
-                                                },
+                                                            comapanyList[index]
+                                                                .id);
+                                                      },
                                                 child: const Text(
                                                   "Delete",
                                                   style: TextStyle(
@@ -147,16 +154,19 @@ class _CompanyState extends State<CompanyScreen> {
     );
   }
 
-  void deletecompany(String id) async {
+  void deletecompany(int id) async {
     Map<String, dynamic> body = {'id': id};
 
     var response = await Dio().post(
         "http://testecommerce.equitysofttechnologies.com/company/delete",
         data: body);
     print(response.data);
+    setState(() {
+      getcompany();
+    });
   }
 
-  void editcompany(String id, String text) async {
+  void editcompany(int id, String text) async {
     Map<String, dynamic> body = {'id': id, 'text': text};
 
     var response = await Dio().get(
@@ -167,12 +177,18 @@ class _CompanyState extends State<CompanyScreen> {
 
   void addcompany() async {
     try {
+      isLoding = true;
       Map<String, dynamic> body = {'company_name': nameCtrl.text};
       var response = await Dio().post(
           "http://testecommerce.equitysofttechnologies.com/company/add",
           data: body);
       /* addCompany = CompanyModel.fromJson(response.data);*/
-      setState(() {});
+      setState(() {
+        getcompany();
+      });
+      setState(() {
+        isLoding = false;
+      });
       print("dfdff--->${response.data}");
       print(response.statusCode);
     } catch (e) {
@@ -182,12 +198,14 @@ class _CompanyState extends State<CompanyScreen> {
 
   void getcompany()async{
     try {
-      var response = await Dio().get("http://testecommerce.equitysofttechnologies.com/company/get");
+      isLoding = true;
+      var response = await Dio()
+          .get("http://testecommerce.equitysofttechnologies.com/company/get");
       print(response.data);
-      companyModel=CompanyModel.fromJson(response.data);
-      comapanyList=companyModel.company;
+      companyModel = CompanyModel.fromJson(response.data);
+      comapanyList = companyModel.company;
       setState(() {
-
+        isLoding = false;
       });
     }
     catch(e)
