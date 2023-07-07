@@ -1,15 +1,42 @@
+import 'package:dio/dio.dart';
+import 'package:ecommerce/details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'common/textfiled.dart';
+import 'model/product_model.dart';
 
-class Addproduct extends StatelessWidget {
+class Addproduct extends StatefulWidget {
   const Addproduct({Key? key}) : super(key: key);
+
+  @override
+  State<Addproduct> createState() => _AddproductState();
+}
+
+String dropdownvalue = "";
+
+var item = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+];
+
+class _AddproductState extends State<Addproduct> {
+  productModel productmodelll = productModel();
+  TextEditingController productnameCtrl = TextEditingController();
+  TextEditingController descriptionCtrl = TextEditingController();
+  TextEditingController priceCtrl = TextEditingController();
+  TextEditingController qtyCtrl = TextEditingController();
+  String seletedImagespath = "";
+  final ImagePicker picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Product"),
+        title: const Text("Add Product"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -18,171 +45,195 @@ class Addproduct extends StatelessWidget {
             children: [
               AppTextfiled(
                 label: 'Productname',
-                obscureText: false,),
-              SizedBox(height: 15,),
-              AppTextfiled(
-                  obscureText: false,
-                  label: 'Category'
+                obscureText: false,
               ),
-              SizedBox(height: 15,),
-             AppTextfiled(obscureText: false,
-                 label: 'Comapany Name'),
-             /*Container(
-            width: 150,
-            decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black12,
-                      offset: Offset(0.0, 0.0),
-                      blurRadius: 1.2),
-                ],
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton(
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  hint: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Month",style: TextStyle(fontSize: 10)),
+              const SizedBox(
+                height: 15,
+              ),
+              AppTextfiled(obscureText: false, label: 'Category'),
+              const SizedBox(
+                height: 15,
+              ),
+              /*AppTextfiled(obscureText: false,
+                 label: 'Comapany Name'),*/
+              /* Container(
+                width: 320,
+                decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 1.2),
+                    ],
+                    borderRadius: BorderRadius.circular(10), color: Colors.white),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    borderRadius: BorderRadius.circular(10),
+
+                    value: dropdownvalue,
+                    items: item.map((e) {
+                      return DropdownMenuItem(value: e, child: Text(e));
+                    }).toList(),
+                    onChanged: (value) {
+                      print("data:->${value}");
+                      setState(() {
+                        dropdownvalue = value.toString();
+                      });
+                    },
                   ),
-                  value: dropdownvalue.isEmpty ? null : dropdownvalue,
-                  items: item.map((String item) {
-                    return DropdownMenuItem(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(item,style: TextStyle(fontSize: 10)),
-                        ),
-                        value: item);
-                  }).toList(),
-                  onChanged: (String? newvalue) {
-                    setState(() {
-                      dropdownvalue = newvalue!;
-                    });
-                  }),
-            ),
-          ),*/
-              SizedBox(height: 15,),
+                ),
+              ),*/
+
+              const SizedBox(
+                height: 15,
+              ),
               AppTextfiled(
-                 maxLines: 10,
+                  maxLines: 5,
                   minLines: 120,
                   obscureText: false,
-                  label: 'Description'
+                  label: 'Description'),
+              const SizedBox(
+                height: 15,
               ),
-              SizedBox(height: 15,),
               AppTextfiled(
                   obscureText: false,
+                  keyboardType: TextInputType.number,
                   label: 'Price'),
-              SizedBox(height: 15,),
+              const SizedBox(
+                height: 15,
+              ),
               AppTextfiled(
                   obscureText: false,
+                  keyboardType: TextInputType.number,
                   label: 'Qty'),
-
-
-              Padding(
-                padding: const EdgeInsets.only(top: 15,right: 290),
+              const Padding(
+                padding: EdgeInsets.only(top: 10, right: 225, bottom: 10),
                 child: Text("Upload Image:"),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 5,
-                  ),
-                 Container(
-                   height: 50,
-                   width: 80,
-                   decoration: BoxDecoration(
-                     borderRadius:BorderRadius.circular(10),
-                     boxShadow: [
-                       BoxShadow(
-                         offset: Offset(0.0, 0.0),
-                         blurRadius: 1.2,
-                         color: Colors.grey,
-                         blurStyle: BlurStyle.outer
-                       ),
-                     ]
-
-                   ),
-                   child: Icon(Icons.add),
-                 ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 80,
-                    decoration: BoxDecoration(
-                        borderRadius:BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0.0, 0.0),
-                              blurRadius: 1.2,
-                              color: Colors.grey,
-                              blurStyle: BlurStyle.outer
-                          ),
-                        ]
-
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 5,
                     ),
-                    child: Icon(Icons.add),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 80,
-                    decoration: BoxDecoration(
-                        borderRadius:BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0.0, 0.0),
-                              blurRadius: 1.2,
-                              color: Colors.grey,
-                              blurStyle: BlurStyle.outer
-                          ),
-                        ]
-
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        height: 50,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: const [
+                              BoxShadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 1.2,
+                                  color: Colors.grey,
+                                  blurStyle: BlurStyle.outer),
+                            ]),
+                        child: const Icon(Icons.add),
+                      ),
                     ),
-                    child: Icon(Icons.add),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 80,
-                    decoration: BoxDecoration(
-                        borderRadius:BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0.0, 0.0),
-                              blurRadius: 1.2,
-                              color: Colors.grey,
-                              blurStyle: BlurStyle.outer
-                          ),
-                        ]
-
+                    const SizedBox(
+                      width: 10,
                     ),
-                    child: Icon(Icons.add),
-                  ),
-                ],
+                    GestureDetector(
+                      onTap: () async {
+                        final XFile? f =
+                            await picker.pickImage(source: ImageSource.gallery);
+                        setState(() {});
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: const [
+                              BoxShadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 1.2,
+                                  color: Colors.grey,
+                                  blurStyle: BlurStyle.outer),
+                            ]),
+                        child: const Icon(Icons.add),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      height: 50,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 1.2,
+                                color: Colors.grey,
+                                blurStyle: BlurStyle.outer),
+                          ]),
+                      child: const Icon(Icons.add),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      height: 50,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 1.2,
+                                color: Colors.grey,
+                                blurStyle: BlurStyle.outer),
+                          ]),
+                      child: const Icon(Icons.add),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: Size(350, 40)
-                  ),
-                  onPressed: (){}, child: Text("SAVE")),
-
-              
-
-
+                  style:
+                      ElevatedButton.styleFrom(fixedSize: const Size(350, 40)),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GetProduct(),
+                        ));
+                  },
+                  child: const Text("SAVE")),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void addproduct(productModel Product) async {
+    try {
+      Map<String, dynamic> body = {
+        'id': Product.id,
+        'product_name': productnameCtrl,
+        'category_id': Product.categoryId,
+        'description': descriptionCtrl,
+        'price': priceCtrl,
+        'qty': qtyCtrl,
+        'product_img': Product.productImg,
+      };
+      var response = await Dio().post(
+          "https://testecommerce.equitysofttechnologies.com/product/add",
+          queryParameters: body);
+      print(response.data);
+    } catch (e) {
+      print(e);
+    }
   }
 }

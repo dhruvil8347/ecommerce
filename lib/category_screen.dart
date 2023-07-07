@@ -14,6 +14,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   TextEditingController namecategoryCtrl = TextEditingController();
   CategoryModel categoryModel = CategoryModel();
+  Category categorymodelll = Category();
   List<Category> categorylist = [];
   bool isLoding = false;
 
@@ -45,11 +46,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
           ElevatedButton(
               onPressed: () {
-                setState(() {});
                 addcategory();
               },
               style: ElevatedButton.styleFrom(fixedSize: const Size(320, 45)),
               child: const Text("ADD")),
+          ElevatedButton(
+              onPressed: () {
+                categorymodelll.categoryName = namecategoryCtrl.text;
+                if (categorymodelll.id > 0) {
+                  editcategory(categorymodelll);
+                }
+              },
+              style: ElevatedButton.styleFrom(fixedSize: const Size(320, 45)),
+              child: const Text("UPDATE")),
           const Padding(
             padding: EdgeInsets.only(top: 25, right: 220),
             child: Text("List of categories"),
@@ -69,15 +78,27 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
                                   child: Text(categorylist[index].categoryName,
                                       style:
                                           const TextStyle(color: Colors.white)),
                                 ),
-                          Row(
-                            children: [
-                                    const Icon(Icons.edit, color: Colors.white),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          editcategory(
+                                              categorymodelll = Category(
+                                            id: categorylist[index].id,
+                                            categoryName: categorylist[index]
+                                                .categoryName,
+                                          ));
+                                          namecategoryCtrl.text =
+                                              categorylist[index].categoryName;
+                                        },
+                                        child: const Icon(Icons.edit,
+                                            color: Colors.white)),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
@@ -112,8 +133,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
       print("dhdhdhdhdhdhdhdhdhdhd================>${response.data}");
       //category: List<Category>.from((json['r']??[]).map((e)=>Category.fromjson(e)))
       // categorylist = List<Category>.from(response.data['r'].map((e)=>Category.fromjson(e)));
-      categoryModel = CategoryModel.fromjson(response.data);
-      categorylist = categoryModel.category;
+      /* categoryModel = CategoryModel.fromjson(response.data);*/
+      /*categorylist = categoryModel.category;*/
       setState(() {
         isLoding = false;
       });
@@ -133,6 +154,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
       });
       print("dfdff--->${response.data}");
       print(response.statusCode);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void editcategory(Category category) async {
+    try {
+      Map<String, dynamic> body = {
+        'id': category.id,
+        'category_name': category.categoryName
+      };
+      var response = await Dio().post(
+          "http://testecommerce.equitysofttechnologies.com/category/update",
+          data: body);
+      print(response.data);
+
+      setState(() {
+        getcategory();
+      });
     } catch (e) {
       print(e);
     }

@@ -33,20 +33,18 @@ class CompanyModel {
 }
 
 class Company {
-  final int id;
-  final String companyName;
+  int id;
+  String companyName;
 
-  const Company({
+  Company({
     this.id = 0,
     this.companyName = "",
   });
 
+  int index = 0;
+
   factory Company.fromJson(Map<String, dynamic> json) {
     try {
-      json.keys.forEach((element) {
-        print('$element ${json[element].runtimeType}');
-      });
-
       return Company(
         id: int.tryParse('${json['id']}') ?? 0,
         companyName: json['company_name'] ?? "".toString(),

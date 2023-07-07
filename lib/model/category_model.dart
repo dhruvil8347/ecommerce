@@ -34,7 +34,9 @@ class Category {
     this.categoryName = "",
   });
 
-  factory Category.fromjson(Map<String,dynamic>json){
+  int index = 0;
+
+  factory Category.fromjson(Map<String, dynamic> json) {
     return Category(
       id: json['id'] ?? 0,
       categoryName: json['category_name'] ?? "",

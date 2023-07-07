@@ -11,8 +11,6 @@ class CompanyScreen extends StatefulWidget {
 }
 
 class _CompanyState extends State<CompanyScreen> {
-
-
   @override
   void initState() {
     super.initState();
@@ -20,7 +18,7 @@ class _CompanyState extends State<CompanyScreen> {
   }
 
   TextEditingController nameCtrl = TextEditingController();
-  CompanyModel companyModel = CompanyModel();
+  Company companyModel = Company();
   List<Company> comapanyList = [];
   bool isLoding = false;
 
@@ -56,6 +54,17 @@ class _CompanyState extends State<CompanyScreen> {
               },
               style: ElevatedButton.styleFrom(fixedSize: const Size(330, 45)),
               child: const Text("ADD")),
+          ElevatedButton(
+              onPressed: () {
+                companyModel.companyName = nameCtrl.text;
+                if (companyModel.id > 0) {
+                  /*  print(companyModel.id);
+                  print(companyModel.companyName);*/
+                  editcompany(companyModel);
+                }
+              },
+              style: ElevatedButton.styleFrom(fixedSize: const Size(330, 45)),
+              child: const Text("UPDATE")),
           const Padding(
             padding: EdgeInsets.only(top: 25, right: 220),
             child: Text("List of companies"),
@@ -77,77 +86,82 @@ class _CompanyState extends State<CompanyScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                            child: Text(comapanyList[index]!.companyName,
+                                child: Text(comapanyList[index].companyName,
                                     style:
                                         const TextStyle(color: Colors.white)),
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
                                       onTap: () {
-                                        editcompany(
-                                            comapanyList[index].id,
-                                            nameCtrl.text = comapanyList[index]
+                                        companyModel = Company(
+                                            id: comapanyList[index].id,
+                                            companyName: comapanyList[index]
                                                 .companyName);
+
+                                        nameCtrl.text =
+                                            comapanyList[index].companyName;
+                                        companyModel.index = index;
                                       },
                                       child: const Icon(Icons.edit,
                                           color: Colors.white)),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text("Delete",
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                          content: const Text(
-                                              'Are you sure you want to delete?'),
-                                          actions: [
-                                            TextButton(
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text("Delete",
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
+                                                content: const Text(
+                                                    'Are you sure you want to delete?'),
+                                                actions: [
+                                                  TextButton(
                                                       onPressed: () {
                                                         Navigator.of(context)
                                                             .pop();
                                                       },
                                                       child:
                                                           const Text("cancel")),
-                                            TextButton(
-                                                onPressed: () {
-                                                  deletecompany(
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        deletecompany(
                                                             comapanyList[index]
                                                                 .id);
                                                       },
-                                                child: const Text(
-                                                  "Delete",
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                ))
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  )),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  /*trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("name: ${comapanyList[index].companyName}"),
-                      Icon(Icons.delete),
+                                                      child: const Text(
+                                                        "Delete",
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      ))
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: const Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        )),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        /*trailing: Row(
+                         mainAxisSize: MainAxisSize.min,
+                         children: [
+                         Text("name: ${comapanyList[index].companyName}"),
+                         Icon(Icons.delete),
                     ],
                   ),*/
-                );
-            },),
+                      );
+                    },
+                  ),
           )
         ],
       ),
@@ -166,13 +180,27 @@ class _CompanyState extends State<CompanyScreen> {
     });
   }
 
-  void editcompany(int id, String text) async {
-    Map<String, dynamic> body = {'id': id, 'text': text};
-
-    var response = await Dio().get(
+  void editcompany(Company company) async {
+    try {
+      Map<String, dynamic> body = {
+        'id': company.id,
+        'company_name': company.companyName
+      };
+      print(body);
+      var response = await Dio().post(
         "http://testecommerce.equitysofttechnologies.com/company/update",
-        data: body);
-    print(response.data);
+        data: body,
+      );
+      if (response.data['s'] == 1) {
+        setState(() {
+          comapanyList[company.index] = company;
+        });
+      } else {
+        throw response.data['m'];
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   void addcompany() async {
@@ -196,20 +224,17 @@ class _CompanyState extends State<CompanyScreen> {
     }
   }
 
-  void getcompany()async{
+  void getcompany() async {
     try {
       isLoding = true;
       var response = await Dio()
           .get("http://testecommerce.equitysofttechnologies.com/company/get");
       print(response.data);
-      companyModel = CompanyModel.fromJson(response.data);
-      comapanyList = companyModel.company;
+      comapanyList = CompanyModel.fromJson(response.data).company;
       setState(() {
         isLoding = false;
       });
-    }
-    catch(e)
-    {
+    } catch (e) {
       print(e);
     }
   }
