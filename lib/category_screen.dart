@@ -132,7 +132,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
           .get("http://testecommerce.equitysofttechnologies.com/category/get");
       print("dhdhdhdhdhdhdhdhdhdhd================>${response.data}");
       //category: List<Category>.from((json['r']??[]).map((e)=>Category.fromjson(e)))
-      // categorylist = List<Category>.from(response.data['r'].map((e)=>Category.fromjson(e)));
+      categorylist = List<Category>.from(
+          response.data['r'].map((e) => Category.fromjson(e)));
       /* categoryModel = CategoryModel.fromjson(response.data);*/
       /*categorylist = categoryModel.category;*/
       setState(() {

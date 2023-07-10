@@ -22,7 +22,7 @@ class productModel {
   int companyId;
   String companyName;
   String description;
-  int price;
+  double price;
   int qty;
   String createdAt;
   int status;
@@ -36,7 +36,7 @@ class productModel {
     this.companyId = 0,
     this.companyName = "",
     this.description = "",
-    this.price = 0,
+    this.price = 0.0,
     this.qty = 0,
     this.createdAt = "",
     this.status = 0,
@@ -52,7 +52,7 @@ class productModel {
         companyId: json['company_id'] ?? 0,
         companyName: json['company_name'] ?? "",
         description: json['description'] ?? "",
-        price: json['price'] ?? 0,
+        price: json['price'].toDouble() ?? 0.0,
         qty: json['qty'] ?? 0,
         createdAt: json['created_at'] ?? "",
         status: json['status'] ?? 0,
