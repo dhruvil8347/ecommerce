@@ -26,23 +26,26 @@ class AppTextfiled extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      cursorColor: cursorColor,
-      obscureText: obscureText,
-      maxLines: maxLines,
-      minLines: maxLines,
-
-      decoration: InputDecoration(
-        label: Text(label,
-          style: TextStyle(
-            color: textColor,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        cursorColor: cursorColor,
+        obscureText: obscureText,
+        maxLines: maxLines,
+        minLines: maxLines,
+        decoration: InputDecoration(
+          label: Text(
+            label,
+            style: TextStyle(
+              color: textColor,
+            ),
           ),
-        ),
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
           ),
         ),
       ),

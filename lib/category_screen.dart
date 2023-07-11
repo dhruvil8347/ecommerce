@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce/main.dart';
 import 'package:ecommerce/model/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -14,8 +15,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   TextEditingController namecategoryCtrl = TextEditingController();
   CategoryModel categoryModel = CategoryModel();
-  Category categorymodelll = Category();
-  List<Category> categorylist = [];
+  CategoryList categorymodelll = CategoryList();
+  List<CategoryList> categorylist = [];
   bool isLoding = false;
 
   @override
@@ -89,7 +90,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     GestureDetector(
                                         onTap: () {
                                           editcategory(
-                                              categorymodelll = Category(
+                                              categorymodelll = CategoryList(
                                             id: categorylist[index].id,
                                             categoryName: categorylist[index]
                                                 .categoryName,
@@ -132,8 +133,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
           .get("http://testecommerce.equitysofttechnologies.com/category/get");
       print("dhdhdhdhdhdhdhdhdhdhd================>${response.data}");
       //category: List<Category>.from((json['r']??[]).map((e)=>Category.fromjson(e)))
-      categorylist = List<Category>.from(
-          response.data['r'].map((e) => Category.fromjson(e)));
+      categorylist = List<CategoryList>.from(
+          response.data['r'].map((e) => CategoryList.fromjson(e)));
       /* categoryModel = CategoryModel.fromjson(response.data);*/
       /*categorylist = categoryModel.category;*/
       setState(() {
@@ -153,14 +154,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
       setState(() {
         getcategory();
       });
-      print("dfdff--->${response.data}");
+      logger.d("dfdff--->${response.data}");
       print(response.statusCode);
     } catch (e) {
       print(e);
     }
   }
 
-  void editcategory(Category category) async {
+  void editcategory(CategoryList category) async {
     try {
       Map<String, dynamic> body = {
         'id': category.id,

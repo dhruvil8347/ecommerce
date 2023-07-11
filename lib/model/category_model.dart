@@ -1,21 +1,16 @@
 class CategoryModel {
   int s;
   String m;
-  List<Category> category;
+  List<CategoryList> category;
 
+  CategoryModel({this.s = 0, this.m = "", this.category = const []});
 
-  CategoryModel ({
-    this.s = 0,
-    this.m = "",
-    this.category = const []
-  });
-
-  factory CategoryModel.fromjson(Map<String,dynamic>json){
+  factory CategoryModel.fromjson(Map<String, dynamic> json) {
     return CategoryModel(
-      s: json['s'] ?? 0,
+        s: json['s'] ?? 0,
       m: json['m'] ?? "",
-      category: List<Category>.from((json['r']??[]).map((e)=>Category.fromjson(e)))
-    );
+        category: List<CategoryList>.from(
+            (json['r'] ?? []).map((e) => CategoryList.fromjson(e))));
   }
 
   Map<String, dynamic> toJson() => {
@@ -25,19 +20,19 @@ class CategoryModel {
   };
 }
 
-class Category {
+class CategoryList {
   int id;
   String categoryName;
 
-  Category({
+  CategoryList({
     this.id = 0,
     this.categoryName = "",
   });
 
   int index = 0;
 
-  factory Category.fromjson(Map<String, dynamic> json) {
-    return Category(
+  factory CategoryList.fromjson(Map<String, dynamic> json) {
+    return CategoryList(
       id: json['id'] ?? 0,
       categoryName: json['category_name'] ?? "",
     );

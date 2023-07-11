@@ -2,6 +2,9 @@ import 'package:ecommerce/category_screen.dart';
 import 'package:ecommerce/company_screen.dart';
 import 'package:ecommerce/productlisting_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
+Logger logger = Logger();
 
 void main() {
   runApp(const MyApp());

@@ -1,10 +1,11 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
+import 'package:ecommerce/model/category_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'common/textfiled.dart';
+import 'model/company_model.dart';
 import 'model/product_model.dart';
 
 class Addproduct extends StatefulWidget {
@@ -21,39 +22,24 @@ class _AddproductState extends State<Addproduct> {
   TextEditingController priceCtrl = TextEditingController();
   TextEditingController qtyCtrl = TextEditingController();
 
-  String seletedImagespath0 = "";
-  String seletedImagespath1 = "";
-  String seletedImagespath2 = "";
-  String seletedImagespath3 = "";
-
   List<File> selectedImages = [];
   final ImagePicker picker = ImagePicker();
 
-  String valuechoose0 = "10";
-  List items0 = [
-    "Company name",
-    "10",
-    "11"
-        "12"
-  ];
-
-  String valuechoose = "Category name";
-  List items = [
-    "Category name",
-    "2",
-    "3",
-    "4",
-    "5",
-  ];
+  List<Company> comapanyList = [];
+  List<CategoryList> categoryListt = [];
+  int? categoryValue;
+  int? companyValue;
 
   @override
   void initState() {
     super.initState();
-    setState(() {});
+    getCompany();
+    getCategory();
   }
 
   @override
   Widget build(BuildContext context) {
+    getCompany();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Product"),
@@ -64,11 +50,12 @@ class _AddproductState extends State<Addproduct> {
           child: Column(
             children: [
               AppTextfiled(
+                controller: productnameCtrl,
                 label: 'Productname',
                 obscureText: false,
               ),
               const SizedBox(
-                height: 15,
+                height: 10,
               ),
               Container(
                 width: 325,
@@ -82,26 +69,30 @@ class _AddproductState extends State<Addproduct> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
                 child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
+                  child: DropdownButton<int>(
+                    padding: EdgeInsets.only(left: 15),
+                    value: categoryValue,
                     borderRadius: BorderRadius.circular(10),
-                    value: valuechoose0,
-                    items: items0.map((e) {
-                      return DropdownMenuItem(value: e, child: Text(e));
+                    hint: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("category"),
+                    ),
+                    items: categoryListt.map((e) {
+                      return DropdownMenuItem<int>(
+                          value: e.id, child: Text(e.categoryName));
                     }).toList(),
                     onChanged: (value) {
                       print("data:->${value}");
                       setState(() {
-                        valuechoose0 = value.toString();
+                        categoryValue = value;
                       });
                     },
                   ),
                 ),
               ),
               const SizedBox(
-                height: 15,
+                height: 10,
               ),
-              /*AppTextfiled(obscureText: false,
-                 label: 'Comapany Name'),*/
               Container(
                 width: 325,
                 decoration: BoxDecoration(
@@ -114,40 +105,43 @@ class _AddproductState extends State<Addproduct> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
                 child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
+                  child: DropdownButton<int>(
+                    padding: EdgeInsets.only(left: 15),
+                    value: companyValue,
                     borderRadius: BorderRadius.circular(10),
-                    value: valuechoose,
-                    items: items.map((e) {
-                      return DropdownMenuItem(value: e, child: Text(e));
+                    hint: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("Company"),
+                    ),
+                    items: comapanyList.map((e) {
+                      return DropdownMenuItem<int>(
+                          value: e.id, child: Text(e.companyName));
                     }).toList(),
                     onChanged: (value) {
                       print("data:->${value}");
                       setState(() {
-                        valuechoose = value.toString();
+                        companyValue = value;
                       });
                     },
                   ),
                 ),
               ),
               const SizedBox(
-                height: 15,
+                height: 10,
               ),
               AppTextfiled(
+                  controller: descriptionCtrl,
                   maxLines: 5,
                   minLines: 120,
                   obscureText: false,
                   label: 'Description'),
-              const SizedBox(
-                height: 15,
-              ),
               AppTextfiled(
+                  controller: priceCtrl,
                   obscureText: false,
                   keyboardType: TextInputType.number,
                   label: 'Price'),
-              const SizedBox(
-                height: 15,
-              ),
               AppTextfiled(
+                  controller: qtyCtrl,
                   obscureText: false,
                   keyboardType: TextInputType.number,
                   label: 'Qty'),
@@ -155,158 +149,6 @@ class _AddproductState extends State<Addproduct> {
                 padding: EdgeInsets.only(top: 10, right: 225, bottom: 10),
                 child: Text("Upload Image:"),
               ),
-              const SizedBox(
-                height: 5,
-              ),
-              /*SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        final XFile? a =
-                            await picker.pickImage(source: ImageSource.gallery);
-                        setState(() {
-                          final File imagefile = File(a!.path);
-                          seletedImagespath1 = imagefile.path;
-                        });
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 1.2,
-                                  color: Colors.grey,
-                                  blurStyle: BlurStyle.outer),
-                            ]),
-                        child:
-                        seletedImagespath1!=""
-                            ? Image.file(File(seletedImagespath1),fit: BoxFit.cover,
-                        )
-                        :Icon(Icons.add),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        final XFile? f =
-                        await picker.pickImage(source: ImageSource.gallery);
-                        setState(() {
-                          final File imagefile = File(f!.path);
-                          seletedImagespath0 = imagefile.path;
-                        });
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 1.2,
-                                  color: Colors.grey,
-                                  blurStyle: BlurStyle.outer),
-                            ]),
-
-                        child:
-
-                        seletedImagespath0!=""
-                            ? Image.file(File(seletedImagespath0),fit: BoxFit.cover,
-                        ):
-                            Icon(Icons.add)
-                      ),
-                    ),
-
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      height: 50,
-                      width: 80,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                                offset: Offset(0.0, 0.0),
-                                blurRadius: 1.2,
-                                color: Colors.grey,
-                                blurStyle: BlurStyle.outer),
-                          ]),
-                      child: const Icon(Icons.add),
-                    ),
-
-                     const SizedBox(
-                      width: 5,
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        height: 50,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 1.2,
-                                  color: Colors.grey,
-                                  blurStyle: BlurStyle.outer),
-                            ]),
-                        child: const Icon(Icons.add),
-                      ),
-                    ),
-                  ],
-                ),
-              ),*/
-              /*Container(
-                height: 52,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        GestureDetector(
-                          onTap: ()
-                          {
-                            getImages();
-                          },
-                          child: Container(
-                            height: 60,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      offset: Offset(0.0, 0.0),
-                                      blurRadius: 1.2,
-                                      color: Colors.grey,
-                                      blurStyle: BlurStyle.outer)
-                                ]),
-                            child:
-
-                            Icon(Icons.add),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),*/
               GestureDetector(
                 onTap: () {
                   getImages();
@@ -333,7 +175,10 @@ class _AddproductState extends State<Addproduct> {
                       width: 120,
                       height: 120,
                       child: selectedImages.isEmpty
-                          ? Center(child: Text('Sorry nothing selected!!'))
+                          ? Image.asset(
+                              "assets/images/not.png",
+                              scale: 7,
+                            )
                           : GridView.builder(
                               itemCount: selectedImages.length,
                               gridDelegate:
@@ -345,32 +190,31 @@ class _AddproductState extends State<Addproduct> {
                                     width: 50,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            offset: Offset(0.0, 0.0),
-                                            blurRadius: 1.2,
-                                            color: Colors.grey,
-                                            blurStyle: BlurStyle.outer)
-                                      ],
-                                    ),
-                                    child: kIsWeb
-                                        ? Image.network(
-                                            selectedImages[index].path,
-                                          )
-                                        : Image.file(
-                                            selectedImages[index],
-                                            fit: BoxFit.cover,
-                                          ));
-                              },
-                            ),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      offset: Offset(0.0, 0.0),
+                                      blurRadius: 1.2,
+                                      color: Colors.grey,
+                                      blurStyle: BlurStyle.outer)
+                                ],
+                              ),
+                              child: kIsWeb
+                                  ? Image.network(
+                                selectedImages[index].path,
+                              )
+                                  : Image.file(
+                                selectedImages[index],
+                                fit: BoxFit.cover,
+                              ));
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
               ElevatedButton(
                   style:
-                      ElevatedButton.styleFrom(fixedSize: const Size(350, 40)),
+                  ElevatedButton.styleFrom(fixedSize: const Size(350, 40)),
                   onPressed: () {
                     addProduct();
                   },
@@ -389,12 +233,55 @@ class _AddproductState extends State<Addproduct> {
         'description': descriptionCtrl.text,
         'price': priceCtrl.text,
         'qty': qtyCtrl.text,
-        'product_img[0]': selectedImages.toList(),
+        'category_id': categoryValue,
+        'company_id': companyValue,
       };
+      for (int i = 0; i < selectedImages.length; i++) {
+        body.addAll({
+          'product_img[$i]': await MultipartFile.fromFile(
+            selectedImages[i].path,
+            filename: selectedImages[i].path.split("/").last,
+          )
+        });
+      }
+      /*  Map<String, dynamic> img =
+     {
+      'product_img' : mulitiselectedImages,
+     };*/
+
+      FormData data = FormData.fromMap(body);
       var response = await Dio().post(
-          "https://testecommerce.equitysofttechnologies.com/product/add",
-          queryParameters: body);
+          "http://testecommerce.equitysofttechnologies.com/product/add",
+          data: data);
+      print(response);
+    } catch (e) {
+      print(e);
+      if (e is DioException) {
+        print(e.response);
+      }
+    }
+  }
+
+  void getCompany() async {
+    try {
+      var response = await Dio()
+          .get("http://testecommerce.equitysofttechnologies.com/company/get");
       print(response.data);
+      comapanyList = List<Company>.from(
+          response.data['r'].map((e) => Company.fromJson(e)));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void getCategory() async {
+    try {
+      var response = await Dio()
+          .get("http://testecommerce.equitysofttechnologies.com/category/get");
+      print(response.data);
+      categoryListt = List<CategoryList>.from(
+          response.data['r'].map((e) => CategoryList.fromjson(e)));
+      setState(() {});
     } catch (e) {
       print(e);
     }
@@ -412,8 +299,13 @@ class _AddproductState extends State<Addproduct> {
             selectedImages.add(File(xfilePick[i].path));
           }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Nothing is selected')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text(
+            'Nothing is selected!',
+            style: TextStyle(
+              color: Colors.red,
+            ),
+          )));
         }
       },
     );
