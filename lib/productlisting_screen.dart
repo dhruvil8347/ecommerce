@@ -3,6 +3,7 @@ import 'package:ecommerce/addproduct_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import 'details_screen.dart';
 import 'model/product_model.dart';
 
 class Product extends StatefulWidget {
@@ -15,7 +16,11 @@ class Product extends StatefulWidget {
 
 class _ProductState extends State<Product> {
   List<productModel> productlist = [];
+  List<ProductImg> productimg = [];
   bool isLoding = false;
+  productModel product = productModel();
+  String imageUrl =
+      "https://testecommerce.equitysofttechnologies.com/uploads/product_img/";
 
   @override
   void initState() {
@@ -54,71 +59,102 @@ class _ProductState extends State<Product> {
                   : ListView.builder(
                       itemCount: productlist.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          height: 130,
-                          width: 330,
-                          color: Colors.deepOrange,
-                          child: Card(
-                            elevation: 5,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Container(
-                                  height: 80,
-                                  width: 80,
-                                  color: Colors.grey,
-                                ),
-                                /*
-                        ListTile(
-                            title: Text(productlist[index].productName),
-                          ),*/
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 20, left: 10),
-                                  child: Container(
-                                    width: 120,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(productlist[index].productName,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w700)),
-                                        Text(
-                                            "Qty ${productlist[index].qty.toString()}"),
-                                        Text(
-                                          "price \u{20B9}${productlist[index].price.toString()}",
-                                        ),
-                                      ],
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GetProduct(
+                                      productListModel: productlist[index]),
+                                ));
+                          },
+                          child: Container(
+                            height: 130,
+                            width: 330,
+                            color: Colors.deepOrange,
+                            child: Card(
+                              elevation: 5,
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    height: 80,
+                                    width: 80,
+                                    child: Image.network(
+                                      imageUrl +
+                                          productlist[index]
+                                              .productImg
+                                              .first
+                                              .productImgg,
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 10,
+                                  /*
+                               ListTile(
+                                title: Text(productlist[index].productName),
+                               ),*/
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 20, left: 10),
+                                    child: Container(
+                                      width: 120,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(productlist[index].productName,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w700)),
+                                          Text(
+                                              "Qty ${productlist[index].qty.toString()}"),
+                                          Text(
+                                            "price \u{20B9}${productlist[index].price.toString()}",
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    ElevatedButton(
-                                        onPressed: () {},
-                                        style: ElevatedButton.styleFrom(
-                                            fixedSize: Size(80, 30)),
-                                        child: Text("Edit")),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          deleteProduct(productlist[index].id);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            fixedSize: Size(80, 30)),
-                                        child: Text("Delete")),
-                                  ],
-                                )
-                              ],
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            editProduct(product = productModel(
+                                              id: productlist[index].id,
+                                              productName: productlist[index]
+                                                  .productName,
+                                              companyId:
+                                                  productlist[index].companyId,
+                                              categoryId:
+                                                  productlist[index].categoryId,
+                                              description: productlist[index]
+                                                  .description,
+                                              price: productlist[index].price,
+                                              qty: productlist[index].qty,
+                                            ));
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(80, 30)),
+                                          child: Text("Edit")),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            deleteProduct(
+                                                productlist[index].id);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(80, 30)),
+                                          child: Text("Delete")),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -139,9 +175,31 @@ class _ProductState extends State<Product> {
       print(response.data);
       productlist = List<productModel>.from(
           response.data['r'].map((e) => productModel.fromJson(e)));
+      /*productimg = List<ProductImg>.from(response.data.map((e)=> ProductImg.fromJson(e)));*/
+
       setState(() {
         isLoding = false;
       });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void editProduct(productModel product) async {
+    try {
+      Map<String, dynamic> body = {
+        'id': product.id,
+        'product_name': product.productName,
+        'company_id': product.companyId,
+        'category_id': product.categoryId,
+        'qty': product.qty,
+        'description': product.description,
+        'price': product.price,
+      };
+      var respose = await Dio().post(
+          "http://testecommerce.equitysofttechnologies.com/product/update",
+          data: body);
+      print(respose.data);
     } catch (e) {
       print(e);
     }

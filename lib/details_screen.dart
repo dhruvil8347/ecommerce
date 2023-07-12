@@ -1,90 +1,109 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'model/product_model.dart';
 
 class GetProduct extends StatefulWidget {
-  const GetProduct({Key? key}) : super(key: key);
+  const GetProduct({Key? key, required this.productListModel})
+      : super(key: key);
+
+  final productModel productListModel;
 
   @override
   State<GetProduct> createState() => _GetProductState();
 }
 
 class _GetProductState extends State<GetProduct> {
-  List<productModel> productList = [];
-  productModel model = productModel();
+  String imageUrl =
+      "https://testecommerce.equitysofttechnologies.com/uploads/product_img/";
+
+  // @override
+  // void initState() {
+  //   getproduct();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Container(
-              height: 180,
-              width: 342,
-              decoration: const BoxDecoration(color: Colors.grey),
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 200,
+                autoPlay: true,
+              ),
+              items: widget.productListModel.productImg.map((e) {
+                return Builder(
+                  builder: (context) {
+                    return Image.network(imageUrl + e.productImgg);
+                  },
+                );
+              }).toList(),
             ),
-            const Row(
+            Row(
               children: [
-                Text("LG LCD Monitor",
+                Text(widget.productListModel.productName,
                     style: TextStyle(fontSize: 15, height: 3)),
-                SizedBox(width: 120),
+                SizedBox(width: 100),
                 Text(
-                  "Price",
+                  "Price: ${widget.productListModel.price}",
                   style: TextStyle(fontSize: 15, height: 3),
                 )
               ],
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(right: 210),
-              child: Text("Computer & Accessories",
+              child: Text(widget.productListModel.categoryName.toString(),
                   style:
                       TextStyle(fontSize: 10, color: Colors.grey, height: 0.2)),
             ),
             Row(
               children: [
                 Text(
-                  "Tesseract pvt",
+                  widget.productListModel.companyName,
                   style: TextStyle(height: 3, fontSize: 15),
                 ),
-                SizedBox(width: 120),
-                Text("QTY${model.productName}",
-                    style: TextStyle(fontSize: 15, height: 3)),
+                const SizedBox(width: 120),
+                Text("QTY ${widget.productListModel.qty}",
+                    style: const TextStyle(fontSize: 15, height: 3)),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 220, top: 25),
+            const Padding(
+              padding: EdgeInsets.only(right: 220, top: 25),
               child: Text("Descripation:",
                   style: TextStyle(height: 1, fontSize: 16)),
             ),
-            Text(
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s",
+            Text(widget.productListModel.description,
                 style: TextStyle(
                   fontSize: 13,
                 )),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 22,
                 ),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(fixedSize: Size(120, 30)),
+                  style:
+                      ElevatedButton.styleFrom(fixedSize: const Size(120, 30)),
                   onPressed: () {},
-                  child: Text("SAVE"),
+                  child: const Text("Edit"),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(fixedSize: Size(120, 30)),
+                  style:
+                      ElevatedButton.styleFrom(fixedSize: const Size(120, 30)),
                   onPressed: () {
-                    getproduct();
+                    // getproduct();
                   },
-                  child: Text("DELETE"),
+                  child: const Text("Delete"),
                 ),
               ],
             ),
@@ -94,16 +113,20 @@ class _GetProductState extends State<GetProduct> {
     );
   }
 
-  void getproduct() async {
-    try {
-      var response = await Dio()
-          .get("https://testecommerce.equitysofttechnologies.com/product/get");
-      print(response.data);
-      model = productModel.fromJson(response.data['r']);
-      setState(() {});
-      //productList = productModel.fromJson(response.data) as List<productModel>;
-    } catch (e) {
-      print(e);
-    }
-  }
+// void getproduct() async {
+//   try {
+//     var response = await Dio()
+//         .get("https://testecommerce.equitysofttechnologies.com/product/get");
+//     print(response.data);
+//   /*  model = productModel.fromJson(response.data['r']);*/
+//   /* productlist = List<productModel>.from(response.data['r'].map((e) => productModel.fromJson(e) ));*/
+//    img= List<ProductImg>.from(response.data['product_img'].map((e) => ProductImg.fromJson(e) ));
+//     setState(() {
+//
+//     });
+//     //productList = productModel.fromJson(response.data) as List<productModel>;
+//   } catch (e) {
+//     print(e);
+//   }
+// }
 }

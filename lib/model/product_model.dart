@@ -1,3 +1,5 @@
+import 'package:flutter/src/widgets/basic.dart';
+
 class product {
   int s;
   String m;
@@ -43,6 +45,8 @@ class productModel {
     this.productImg = const [],
   });
 
+  int index = 0;
+
   factory productModel.fromJson(Map<String, dynamic> json) {
     return productModel(
         id: json['id'] ?? 0,
@@ -65,13 +69,13 @@ class productModel {
 class ProductImg {
   int id;
   int productId;
-  String productImg;
+  String productImgg;
   String createdAt;
 
   ProductImg({
     this.id = 0,
     this.productId = 0,
-    this.productImg = "",
+    this.productImgg = "",
     this.createdAt = "",
   });
 
@@ -79,7 +83,7 @@ class ProductImg {
     return ProductImg(
       id: json['id'] ?? 0,
       productId: json['product_id'] ?? 0,
-      productImg: json['product_img'] ?? "",
+      productImgg: json['product_img'] ?? "",
       createdAt: json['created_at'] ?? "",
     );
   }

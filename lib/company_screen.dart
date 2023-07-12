@@ -21,6 +21,7 @@ class _CompanyState extends State<CompanyScreen> {
   Company companyModel = Company();
   List<Company> comapanyList = [];
   bool isLoding = false;
+  bool validate = false;
 
   // List<Re> comapany = [];
   // R view = R.fromJson({});
@@ -40,7 +41,13 @@ class _CompanyState extends State<CompanyScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: TextField(
+            child: TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "plase enter the name";
+                }
+                return null;
+              },
               controller: nameCtrl,
               decoration: InputDecoration(
                   label: const Text("Company Name"),
@@ -98,7 +105,6 @@ class _CompanyState extends State<CompanyScreen> {
                                             id: comapanyList[index].id,
                                             companyName: comapanyList[index]
                                                 .companyName);
-
                                         nameCtrl.text =
                                             comapanyList[index].companyName;
                                         companyModel.index = index;
@@ -121,16 +127,11 @@ class _CompanyState extends State<CompanyScreen> {
                                                 actions: [
                                                   TextButton(
                                                       onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child:
-                                                          const Text("cancel")),
-                                                  TextButton(
-                                                      onPressed: () {
                                                         deletecompany(
                                                             comapanyList[index]
                                                                 .id);
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
                                                       child: const Text(
                                                         "Delete",

@@ -190,31 +190,31 @@ class _AddproductState extends State<Addproduct> {
                                     width: 50,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      offset: Offset(0.0, 0.0),
-                                      blurRadius: 1.2,
-                                      color: Colors.grey,
-                                      blurStyle: BlurStyle.outer)
-                                ],
-                              ),
-                              child: kIsWeb
-                                  ? Image.network(
-                                selectedImages[index].path,
-                              )
-                                  : Image.file(
-                                selectedImages[index],
-                                fit: BoxFit.cover,
-                              ));
-                        },
-                      ),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            offset: Offset(0.0, 0.0),
+                                            blurRadius: 1.2,
+                                            color: Colors.grey,
+                                            blurStyle: BlurStyle.outer)
+                                      ],
+                                    ),
+                                    child: kIsWeb
+                                        ? Image.network(
+                                            selectedImages[index].path,
+                                          )
+                                        : Image.file(
+                                            selectedImages[index],
+                                            fit: BoxFit.cover,
+                                          ));
+                              },
+                            ),
                     ),
                   ),
                 ],
               ),
               ElevatedButton(
                   style:
-                  ElevatedButton.styleFrom(fixedSize: const Size(350, 40)),
+                      ElevatedButton.styleFrom(fixedSize: const Size(350, 40)),
                   onPressed: () {
                     addProduct();
                   },
