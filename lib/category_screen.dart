@@ -18,11 +18,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
   CategoryList categorymodelll = CategoryList();
   List<CategoryList> categorylist = [];
   bool isLoding = false;
+  bool isEdit = false;
+
+  bool validate = false;
 
   @override
   void initState() {
     super.initState();
     getcategory();
+    isEdit = false;
   }
 
   @override
@@ -40,6 +44,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             child: TextField(
               controller: namecategoryCtrl,
               decoration: InputDecoration(
+                  errorText: validate ? "please enter the text" : null,
                   label: const Text("Category"),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
@@ -47,19 +52,49 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
           ElevatedButton(
               onPressed: () {
-                addcategory();
+                setState(() {
+                  namecategoryCtrl.text.isEmpty
+                      ? validate = true
+                      : validate = false;
+                });
+                if (namecategoryCtrl.text.isNotEmpty) {
+                  addcategory();
+                }
+
+                namecategoryCtrl.clear();
               },
-              style: ElevatedButton.styleFrom(fixedSize: const Size(320, 45)),
-              child: const Text("ADD")),
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  fixedSize: const Size(320, 45)),
+              child: Text("ADD")),
+          SizedBox(
+            height: 5,
+          ),
           ElevatedButton(
               onPressed: () {
                 categorymodelll.categoryName = namecategoryCtrl.text;
                 if (categorymodelll.id > 0) {
                   editcategory(categorymodelll);
                 }
+                namecategoryCtrl.clear();
               },
-              style: ElevatedButton.styleFrom(fixedSize: const Size(320, 45)),
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  fixedSize: const Size(320, 45)),
               child: const Text("UPDATE")),
+
+          /*Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Container(
+          height: 45,
+          decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(10)),
+        ),
+      ),*/
+
           const Padding(
             padding: EdgeInsets.only(top: 25, right: 220),
             child: Text("List of categories"),
@@ -81,11 +116,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(15.0),
-                                  child: Text(categorylist[index].categoryName,
-                                      style:
-                                          const TextStyle(color: Colors.white)),
+                                  child: SizedBox(
+                                    width: 220,
+                                    child:
+                                        Text(categorylist[index].categoryName,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            softWrap: true,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            )),
+                                  ),
                                 ),
                                 Row(
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     GestureDetector(
                                         onTap: () {
@@ -113,7 +157,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                         ),
                                       ),
                                     ),
-                            ],
+                                  ],
                           )
                         ],
                       )),

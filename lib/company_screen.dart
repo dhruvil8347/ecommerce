@@ -41,15 +41,10 @@ class _CompanyState extends State<CompanyScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "plase enter the name";
-                }
-                return null;
-              },
+            child: TextField(
               controller: nameCtrl,
               decoration: InputDecoration(
+                  errorText: validate ? "Don't be chutiya pa" : null,
                   label: const Text("Company Name"),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
@@ -57,10 +52,24 @@ class _CompanyState extends State<CompanyScreen> {
           ),
           ElevatedButton(
               onPressed: () {
-                addcompany();
+                setState(() {
+                  nameCtrl.text.isEmpty ? validate = true : validate = false;
+                });
+
+                if (nameCtrl.text.isNotEmpty) {
+                  addcompany();
+                }
+                nameCtrl.clear();
               },
-              style: ElevatedButton.styleFrom(fixedSize: const Size(330, 45)),
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(330, 45),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
               child: const Text("ADD")),
+          const SizedBox(
+            height: 10,
+          ),
           ElevatedButton(
               onPressed: () {
                 companyModel.companyName = nameCtrl.text;
@@ -70,7 +79,10 @@ class _CompanyState extends State<CompanyScreen> {
                   editcompany(companyModel);
                 }
               },
-              style: ElevatedButton.styleFrom(fixedSize: const Size(330, 45)),
+              style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(330, 45),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
               child: const Text("UPDATE")),
           const Padding(
             padding: EdgeInsets.only(top: 25, right: 220),

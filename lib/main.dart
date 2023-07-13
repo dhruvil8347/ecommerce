@@ -87,18 +87,16 @@ class _MyHomepageState extends State<MyHomepage> {
                 height: 200,
                 width: 400,
                 color: Colors.orange[200],
-                child: const Center(child: Text("Manage Company",style: TextStyle(color: Colors.white,fontSize: 22),)),
+                child: const Center(
+                    child: Text(
+                  "Manage Company",
+                  style: TextStyle(color: Colors.white, fontSize: 22),
+                )),
               ),
             ),
-
           ),
-
-
         ],
-      )
-
-
-
+      ),
     );
   }
 }

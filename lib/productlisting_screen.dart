@@ -39,8 +39,12 @@ class _ProductState extends State<Product> {
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Addproduct(),));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            Addproduct(productListModel: productModel()),
+                      ));
                 },
                 child: Icon(Icons.add)),
           ),
@@ -71,7 +75,6 @@ class _ProductState extends State<Product> {
                           child: Container(
                             height: 130,
                             width: 330,
-                            color: Colors.deepOrange,
                             child: Card(
                               elevation: 5,
                               child: Row(
@@ -90,10 +93,6 @@ class _ProductState extends State<Product> {
                                               .productImgg,
                                     ),
                                   ),
-                                  /*
-                               ListTile(
-                                title: Text(productlist[index].productName),
-                               ),*/
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         top: 20, left: 10),
@@ -117,7 +116,7 @@ class _ProductState extends State<Product> {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 20,
+                                    width: 15,
                                   ),
                                   Column(
                                     children: [
@@ -126,19 +125,15 @@ class _ProductState extends State<Product> {
                                       ),
                                       ElevatedButton(
                                           onPressed: () {
-                                            editProduct(product = productModel(
-                                              id: productlist[index].id,
-                                              productName: productlist[index]
-                                                  .productName,
-                                              companyId:
-                                                  productlist[index].companyId,
-                                              categoryId:
-                                                  productlist[index].categoryId,
-                                              description: productlist[index]
-                                                  .description,
-                                              price: productlist[index].price,
-                                              qty: productlist[index].qty,
-                                            ));
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Addproduct(
+                                                    productListModel:
+                                                        productlist[index],
+                                                  ),
+                                                ));
                                           },
                                           style: ElevatedButton.styleFrom(
                                               fixedSize: Size(80, 30)),

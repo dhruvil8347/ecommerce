@@ -9,14 +9,16 @@ import 'model/company_model.dart';
 import 'model/product_model.dart';
 
 class Addproduct extends StatefulWidget {
-  const Addproduct({Key? key}) : super(key: key);
+  Addproduct({Key? key, required this.productListModel}) : super(key: key);
+
+  final productModel productListModel;
 
   @override
   State<Addproduct> createState() => _AddproductState();
 }
 
 class _AddproductState extends State<Addproduct> {
-  productModel productmodelll = productModel();
+  // productModel productmodelll = productModel();
   TextEditingController productnameCtrl = TextEditingController();
   TextEditingController descriptionCtrl = TextEditingController();
   TextEditingController priceCtrl = TextEditingController();
@@ -29,20 +31,34 @@ class _AddproductState extends State<Addproduct> {
   List<CategoryList> categoryListt = [];
   int? categoryValue;
   int? companyValue;
+  bool isEdit = false;
 
   @override
   void initState() {
     super.initState();
+    if (widget.productListModel.id > 0) {
+      productnameCtrl.text = widget.productListModel.productName;
+      descriptionCtrl.text = widget.productListModel.description;
+      qtyCtrl.text = widget.productListModel.qty.toString();
+      categoryValue = widget.productListModel.categoryId;
+      companyValue = widget.productListModel.companyId;
+      /*selectedImages = widget.productListModel.productImg.cast<File>();*/
+      priceCtrl.text = widget.productListModel.price.toString();
+
+      isEdit = true;
+    }
     getCompany();
     getCategory();
   }
+
+  productModel productmodel = productModel();
 
   @override
   Widget build(BuildContext context) {
     getCompany();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Product"),
+        title: Text(isEdit ? "Edit product" : "Add Product"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -70,10 +86,10 @@ class _AddproductState extends State<Addproduct> {
                     color: Colors.white),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
-                    padding: EdgeInsets.only(left: 15),
+                    padding: const EdgeInsets.only(left: 15),
                     value: categoryValue,
                     borderRadius: BorderRadius.circular(10),
-                    hint: Padding(
+                    hint: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text("category"),
                     ),
@@ -106,7 +122,7 @@ class _AddproductState extends State<Addproduct> {
                     color: Colors.white),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
-                    padding: EdgeInsets.only(left: 15),
+                    padding: const EdgeInsets.only(left: 15),
                     value: companyValue,
                     borderRadius: BorderRadius.circular(10),
                     hint: const Padding(
@@ -216,14 +232,36 @@ class _AddproductState extends State<Addproduct> {
                   style:
                       ElevatedButton.styleFrom(fixedSize: const Size(350, 40)),
                   onPressed: () {
-                    addProduct();
+                    productmodel.id == 0
+                        ? addProduct()
+                        : editProduct(productmodel);
                   },
-                  child: const Text("SAVE")),
+                  child: Text(isEdit ? "Update" : "SAVE")),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void editProduct(productModel product) async {
+    try {
+      Map<String, dynamic> body = {
+        'id': product.id,
+        'product_name': product.productName,
+        'company_id': product.companyId,
+        'category_id': product.categoryId,
+        'qty': product.qty,
+        'description': product.description,
+        'price': product.price,
+      };
+      var respose = await Dio().post(
+          "http://testecommerce.equitysofttechnologies.com/product/update",
+          data: body);
+      print(respose.data);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void addProduct() async {
