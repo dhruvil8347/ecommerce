@@ -43,7 +43,7 @@ class _CompanyState extends State<CompanyScreen> {
             child: TextField(
               controller: nameCtrl,
               decoration: InputDecoration(
-                  errorText: validate ? "Don't be chutiya pa" : null,
+                  errorText: validate ? "*required Companyname " : null,
                   label: const Text("Company Name"),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),

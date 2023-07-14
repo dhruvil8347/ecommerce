@@ -82,7 +82,7 @@ class _ProductState extends State<Product> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  Container(
+                                  SizedBox(
                                     height: 80,
                                     width: 80,
                                     child: Image.network(
@@ -103,13 +103,20 @@ class _ProductState extends State<Product> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(productlist[index].productName,
+                                              overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w700)),
+                                                fontSize: 16,
+                                              )),
                                           Text(
-                                              "Qty ${productlist[index].qty.toString()}"),
+                                              " ${productlist[index].categoryName}",
+                                              style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey)),
                                           Text(
-                                            "price \u{20B9}${productlist[index].price.toString()}",
+                                            "Qty: 0${productlist[index].qty.toString()}",
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.grey),
                                           ),
                                         ],
                                       ),
@@ -195,6 +202,9 @@ class _ProductState extends State<Product> {
           "http://testecommerce.equitysofttechnologies.com/product/update",
           data: body);
       print(respose.data);
+      setState(() {
+        getproduct();
+      });
     } catch (e) {
       print(e);
     }

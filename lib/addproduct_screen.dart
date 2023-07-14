@@ -189,12 +189,13 @@ class _AddproductState extends State<Addproduct> {
                   Expanded(
                     child: SizedBox(
                       width: 120,
-                      height: 120,
+                      height: 60,
                       child: selectedImages.isEmpty
-                          ? Image.asset(
-                              "assets/images/not.png",
-                              scale: 7,
-                            )
+                          ? Center(
+                              child: Text(
+                              "Image not found",
+                              style: TextStyle(color: Colors.red),
+                            ))
                           : GridView.builder(
                               itemCount: selectedImages.length,
                               gridDelegate:
@@ -232,7 +233,8 @@ class _AddproductState extends State<Addproduct> {
                   style:
                       ElevatedButton.styleFrom(fixedSize: const Size(350, 40)),
                   onPressed: () {
-                    productmodel.id > 0
+                    print('UPDATE:::::::::::${widget.productListModel.id}');
+                    /*   widget.productListModel.id > 0 & productmodel.id == 0
                         ? addProduct()
                         : editProduct(productModel(
                             id: widget.productListModel.id,
@@ -242,7 +244,24 @@ class _AddproductState extends State<Addproduct> {
                             qty: int.parse(qtyCtrl.text),
                             categoryId: categoryValue ?? 0,
                             companyId: companyValue ?? 0,
-                          ));
+                          ));*/
+
+                    if (widget.productListModel.id > 0) {
+                      editProduct(productModel(
+                        id: widget.productListModel.id,
+                        productName: productnameCtrl.text,
+                        description: descriptionCtrl.text,
+                        price: double.parse(priceCtrl.text),
+                        qty: int.parse(qtyCtrl.text),
+                        categoryId: categoryValue ?? 0,
+                        companyId: companyValue ?? 0,
+                      ));
+                    } else if (productmodel.id > 0) {
+                      print("your product add successfully");
+                    } else {
+                      addProduct();
+                    }
+                    Navigator.of(context).pop();
                   },
                   child: Text(isEdit ? "Update" : "SAVE")),
             ],

@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'addproduct_screen.dart';
 import 'model/product_model.dart';
@@ -29,13 +30,13 @@ class _GetProductState extends State<GetProduct> {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
             CarouselSlider(
               options: CarouselOptions(
                 height: 200,
-                autoPlay: true,
+                autoPlay: false,
               ),
               items: widget.productListModel.productImg.map((e) {
                 return Builder(
@@ -46,29 +47,31 @@ class _GetProductState extends State<GetProduct> {
               }).toList(),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(widget.productListModel.productName,
-                    style: TextStyle(fontSize: 15, height: 3)),
-                SizedBox(width: 100),
+                    style: const TextStyle(fontSize: 15, height: 3)),
                 Text(
                   "Price: ${widget.productListModel.price}",
-                  style: TextStyle(fontSize: 15, height: 3),
+                  style: const TextStyle(fontSize: 15, height: 3),
                 )
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(right: 210),
-              child: Text(widget.productListModel.categoryName.toString(),
-                  style:
-                      TextStyle(fontSize: 10, color: Colors.grey, height: 0.2)),
+              padding: const EdgeInsets.only(right: 210),
+              child: Text(widget.productListModel.categoryName,
+                  style: const TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey,
+                  )),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   widget.productListModel.companyName,
-                  style: TextStyle(height: 3, fontSize: 15),
+                  style: const TextStyle(height: 3, fontSize: 15),
                 ),
-                const SizedBox(width: 120),
                 Text("QTY ${widget.productListModel.qty}",
                     style: const TextStyle(fontSize: 15, height: 3)),
               ],
@@ -79,46 +82,47 @@ class _GetProductState extends State<GetProduct> {
                   style: TextStyle(height: 1, fontSize: 16)),
             ),
             Text(widget.productListModel.description,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13,
                 )),
+            Text(
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took "),
             const SizedBox(
-              height: 20,
+              height: 45,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const SizedBox(
-                  width: 22,
-                ),
                 ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(fixedSize: const Size(120, 30)),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Addproduct(
-                            productListModel: productModel(),
-                          ),
-                        ));
-                  },
-                  child: const Text("Edit"),
-                ),
-                const SizedBox(width: 12),
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(120, 30)),
+                    child: const Text("Edit")),
                 ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(fixedSize: const Size(120, 30)),
-                  onPressed: () {
-                    // getproduct();
-                  },
-                  child: const Text("Delete"),
-                ),
+                    style: ElevatedButton.styleFrom(fixedSize: Size(120, 35)),
+                    onPressed: () {
+                      deleteProduct(widget.productListModel.id);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Delete")),
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  void deleteProduct(int id) async {
+    try {
+      Map<String, dynamic> body = {'id': id};
+      var response = await Dio().post(
+          "http://testecommerce.equitysofttechnologies.com/product/delete",
+          data: body);
+      print(response.data);
+    } catch (e) {
+      print(e);
+    }
   }
 
   /// void getproduct() async {

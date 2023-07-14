@@ -43,7 +43,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             child: TextField(
               controller: namecategoryCtrl,
               decoration: InputDecoration(
-                  errorText: validate ? "please enter the text" : null,
+                  errorText: validate ? "Required Category" : null,
                   label: const Text("Category"),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
