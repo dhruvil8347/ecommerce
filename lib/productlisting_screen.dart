@@ -33,7 +33,7 @@ class _ProductState extends State<Product> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Product")),
+        title: const Center(child: Text("Product")),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -46,7 +46,7 @@ class _ProductState extends State<Product> {
                             Addproduct(productListModel: productModel()),
                       ));
                 },
-                child: Icon(Icons.add)),
+                child: const Icon(Icons.add)),
           ),
 
         ],
@@ -79,7 +79,7 @@ class _ProductState extends State<Product> {
                               elevation: 5,
                               child: Row(
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   Container(
@@ -103,7 +103,7 @@ class _ProductState extends State<Product> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(productlist[index].productName,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w700)),
                                           Text(
@@ -115,12 +115,12 @@ class _ProductState extends State<Product> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 15,
                                   ),
                                   Column(
                                     children: [
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       ElevatedButton(
@@ -136,16 +136,16 @@ class _ProductState extends State<Product> {
                                                 ));
                                           },
                                           style: ElevatedButton.styleFrom(
-                                              fixedSize: Size(80, 30)),
-                                          child: Text("Edit")),
+                                              fixedSize: const Size(80, 30)),
+                                          child: const Text("Edit")),
                                       ElevatedButton(
                                           onPressed: () {
                                             deleteProduct(
                                                 productlist[index].id);
                                           },
                                           style: ElevatedButton.styleFrom(
-                                              fixedSize: Size(80, 30)),
-                                          child: Text("Delete")),
+                                              fixedSize: const Size(80, 30)),
+                                          child: const Text("Delete")),
                                     ],
                                   )
                                 ],

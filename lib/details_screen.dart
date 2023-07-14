@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'addproduct_screen.dart';
 import 'model/product_model.dart';
 
 class GetProduct extends StatefulWidget {
@@ -21,6 +22,7 @@ class _GetProductState extends State<GetProduct> {
   //   getproduct();
   //   super.initState();
   // }
+  List<productModel> productlist = [];
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +93,15 @@ class _GetProductState extends State<GetProduct> {
                 ElevatedButton(
                   style:
                       ElevatedButton.styleFrom(fixedSize: const Size(120, 30)),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Addproduct(
+                            productListModel: productModel(),
+                          ),
+                        ));
+                  },
                   child: const Text("Edit"),
                 ),
                 const SizedBox(width: 12),
@@ -111,20 +121,20 @@ class _GetProductState extends State<GetProduct> {
     );
   }
 
-// void getproduct() async {
-//   try {
-//     var response = await Dio()
-//         .get("https://testecommerce.equitysofttechnologies.com/product/get");
-//     print(response.data);
-//   /*  model = productModel.fromJson(response.data['r']);*/
-//   /* productlist = List<productModel>.from(response.data['r'].map((e) => productModel.fromJson(e) ));*/
-//    img= List<ProductImg>.from(response.data['product_img'].map((e) => ProductImg.fromJson(e) ));
-//     setState(() {
-//
-//     });
-//     //productList = productModel.fromJson(response.data) as List<productModel>;
-//   } catch (e) {
-//     print(e);
-//   }
-// }
+  /// void getproduct() async {
+  ///   try {
+  ///     var response = await Dio()
+  ///         .get("https://testecommerce.equitysofttechnologies.com/product/get");
+  ///     print(response.data);
+  ///   /*  model = productModel.fromJson(response.data['r']);*/
+  ///   /* productlist = List<productModel>.from(response.data['r'].map((e) => productModel.fromJson(e) ));*/
+  ///    img= List<ProductImg>.from(response.data['product_img'].map((e) => ProductImg.fromJson(e) ));
+  ///     setState(() {
+  ///
+  ///     });
+  ///     //productList = productModel.fromJson(response.data) as List<productModel>;
+  ///   } catch (e) {
+  ///     print(e);
+  ///   }
+  /// }
 }

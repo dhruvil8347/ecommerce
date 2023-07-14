@@ -64,6 +64,21 @@ class productModel {
         productImg: List<ProductImg>.from(
             (json['product_img'] ?? []).map((e) => ProductImg.fromJson(e))));
   }
+
+  Map<String, dynamic> tojson() => {
+        'id': id,
+        'product_name': productName,
+        'category_id': categoryId,
+        'category_name': categoryName,
+        'company_id': companyId,
+        'company_name': companyName,
+        'description': description,
+        'price': price,
+        'qty': qty,
+        'created_at': createdAt,
+        'status': status,
+        'productImg': List<dynamic>.from(productImg.map((e) => e.toJson())),
+      };
 }
 
 class ProductImg {
@@ -87,4 +102,11 @@ class ProductImg {
       createdAt: json['created_at'] ?? "",
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'product_id': productId,
+        'product_img': productImgg,
+        'created_at': createdAt,
+      };
 }

@@ -232,9 +232,17 @@ class _AddproductState extends State<Addproduct> {
                   style:
                       ElevatedButton.styleFrom(fixedSize: const Size(350, 40)),
                   onPressed: () {
-                    productmodel.id == 0
+                    productmodel.id > 0
                         ? addProduct()
-                        : editProduct(productmodel);
+                        : editProduct(productModel(
+                            id: widget.productListModel.id,
+                            productName: productnameCtrl.text,
+                            description: descriptionCtrl.text,
+                            price: double.parse(priceCtrl.text),
+                            qty: int.parse(qtyCtrl.text),
+                            categoryId: categoryValue ?? 0,
+                            companyId: companyValue ?? 0,
+                          ));
                   },
                   child: Text(isEdit ? "Update" : "SAVE")),
             ],
@@ -258,6 +266,7 @@ class _AddproductState extends State<Addproduct> {
       var respose = await Dio().post(
           "http://testecommerce.equitysofttechnologies.com/product/update",
           data: body);
+      setState(() {});
       print(respose.data);
     } catch (e) {
       print(e);
