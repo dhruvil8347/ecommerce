@@ -320,6 +320,7 @@ class _AddproductState extends State<Addproduct> {
           "http://testecommerce.equitysofttechnologies.com/product/add",
           data: data);
       print(response);
+      setState(() {});
     } catch (e) {
       print(e);
       if (e is DioException) {

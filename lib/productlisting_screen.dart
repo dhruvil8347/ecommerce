@@ -179,6 +179,8 @@ class _ProductState extends State<Product> {
           response.data['r'].map((e) => productModel.fromJson(e)));
       /*productimg = List<ProductImg>.from(response.data.map((e)=> ProductImg.fromJson(e)));*/
 
+      setState(() {});
+
       setState(() {
         isLoding = false;
       });

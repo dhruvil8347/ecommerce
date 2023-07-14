@@ -71,7 +71,7 @@ class _CompanyState extends State<CompanyScreen> {
           ),
           ElevatedButton(
               onPressed: () {
-                companyModel.companyName = nameCtrl.text;
+                companyModel.companyName = nameCtrl.text.trim();
                 if (companyModel.id > 0) {
                   /*  print(companyModel.id);
                   print(companyModel.companyName);*/
