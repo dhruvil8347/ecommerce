@@ -18,11 +18,6 @@ class _GetProductState extends State<GetProduct> {
   String imageUrl =
       "https://testecommerce.equitysofttechnologies.com/uploads/product_img/";
 
-  // @override
-  // void initState() {
-  //   getproduct();
-  //   super.initState();
-  // }
   List<productModel> productlist = [];
 
   @override
@@ -94,7 +89,14 @@ class _GetProductState extends State<GetProduct> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Addproduct(
+                                productListModel: widget.productListModel),
+                          ));
+                    },
                     style: ElevatedButton.styleFrom(
                         fixedSize: const Size(120, 30)),
                     child: const Text("Edit")),

@@ -3,26 +3,23 @@ import 'package:flutter/material.dart';
 class AppTextfiled extends StatelessWidget {
    AppTextfiled({Key? key,
      this.controller,
-     this.keyboardType,
-     this.cursorColor,
-     required this.obscureText,
-     required this.label,
-     this.textColor,
-     this.maxLines,
-     this.minLines,
-
-   }) : super(key: key);
+    this.keyboardType,
+    this.cursorColor,
+    required this.obscureText,
+    required this.label,
+    this.textColor,
+    this.maxLines,
+    this.minLines,
+  }) : super(key: key);
 
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final Color? cursorColor;
-   final bool obscureText;
-   final String label;
-   final Color? textColor;
-   final int? maxLines;
-   final int? minLines;
-
-
+  final bool obscureText;
+  final String label;
+  final Color? textColor;
+  final int? maxLines;
+  final int? minLines;
 
   @override
   Widget build(BuildContext context) {

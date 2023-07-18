@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:ecommerce/main.dart';
 import 'package:ecommerce/model/category_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +25,17 @@ class _AddproductState extends State<Addproduct> {
   TextEditingController priceCtrl = TextEditingController();
   TextEditingController qtyCtrl = TextEditingController();
 
-  List<File> selectedImages = [];
+  List<String> selectedImages = [];
   final ImagePicker picker = ImagePicker();
 
   List<Company> comapanyList = [];
   List<CategoryList> categoryListt = [];
+  List<productModel> productlist = [];
+
   int? categoryValue;
   int? companyValue;
+  String imageUrl =
+      "https://testecommerce.equitysofttechnologies.com/uploads/product_img/";
   bool isEdit = false;
 
   @override
@@ -42,7 +47,8 @@ class _AddproductState extends State<Addproduct> {
       qtyCtrl.text = widget.productListModel.qty.toString();
       categoryValue = widget.productListModel.categoryId;
       companyValue = widget.productListModel.companyId;
-      /*selectedImages = widget.productListModel.productImg.cast<File>();*/
+      selectedImages =
+          widget.productListModel.productImg.map((e) => e.productImgg).toList();
       priceCtrl.text = widget.productListModel.price.toString();
 
       isEdit = true;
@@ -191,7 +197,7 @@ class _AddproductState extends State<Addproduct> {
                       width: 120,
                       height: 60,
                       child: selectedImages.isEmpty
-                          ? Center(
+                          ? const Center(
                               child: Text(
                               "Image not found",
                               style: TextStyle(color: Colors.red),
@@ -215,12 +221,13 @@ class _AddproductState extends State<Addproduct> {
                                             blurStyle: BlurStyle.outer)
                                       ],
                                     ),
-                                    child: kIsWeb
+                                    child: !selectedImages[index]
+                                            .contains("data/user")
                                         ? Image.network(
-                                            selectedImages[index].path,
+                                            imageUrl + selectedImages[index],
                                           )
                                         : Image.file(
-                                            selectedImages[index],
+                                            File(selectedImages[index]),
                                             fit: BoxFit.cover,
                                           ));
                               },
@@ -305,8 +312,8 @@ class _AddproductState extends State<Addproduct> {
       for (int i = 0; i < selectedImages.length; i++) {
         body.addAll({
           'product_img[$i]': await MultipartFile.fromFile(
-            selectedImages[i].path,
-            filename: selectedImages[i].path.split("/").last,
+            selectedImages[i],
+            filename: selectedImages[i].split("/").last,
           )
         });
       }
@@ -363,7 +370,8 @@ class _AddproductState extends State<Addproduct> {
       () {
         if (xfilePick.isNotEmpty) {
           for (var i = 0; i < xfilePick.length; i++) {
-            selectedImages.add(File(xfilePick[i].path));
+            logger.w(xfilePick[i].path);
+            selectedImages.add(xfilePick[i].path);
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

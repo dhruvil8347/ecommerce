@@ -19,6 +19,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   List<CategoryList> categorylist = [];
   bool isLoding = false;
   bool isEdit = false;
+  final formkey = GlobalKey<FormState>();
 
   bool validate = false;
 
@@ -40,27 +41,33 @@ class _CategoryScreenState extends State<CategoryScreen> {
           const SizedBox(height: 10,),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: TextField(
-              controller: namecategoryCtrl,
-              decoration: InputDecoration(
-                  errorText: validate ? "Required Category" : null,
-                  label: const Text("Category"),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+            child: Form(
+              key: formkey,
+              child: TextFormField(
+                validator: (value) {
+                  if (value?.isEmpty ?? false) {
+                    return "*required categoryname ";
+                  }
+                  return null;
+                },
+                controller: namecategoryCtrl,
+                decoration: InputDecoration(
+                    label: const Text("Category"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10))),
+              ),
             ),
           ),
           ElevatedButton(
               onPressed: () {
-                setState(() {
-                  namecategoryCtrl.text.isEmpty
-                      ? validate = true
-                      : validate = false;
-                });
-                if (namecategoryCtrl.text.isNotEmpty) {
-                  addcategory();
+                if (formkey.currentState!.validate()) {
+                  categorymodelll.categoryName = namecategoryCtrl.text.trim();
+                  if (categorymodelll.categoryName != 0) {
+                    editcategory(categorymodelll);
+                  } else {
+                    addcategory();
+                  }
                 }
-
-                namecategoryCtrl.clear();
               },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -70,10 +77,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
           SizedBox(
             height: 5,
           ),
-          ElevatedButton(
+          /* ElevatedButton(
               onPressed: () {
                 categorymodelll.categoryName = namecategoryCtrl.text;
-                if (categorymodelll.id > 0) {
+                if (categorymodelll.id != 0) {
                   editcategory(categorymodelll);
                 }
                 namecategoryCtrl.clear();
@@ -82,7 +89,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   fixedSize: const Size(320, 45)),
-              child: const Text("UPDATE")),
+              child: const Text("UPDATE")),*/
 
           /*Padding(
         padding: const EdgeInsets.all(20.0),
@@ -214,7 +221,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           "http://testecommerce.equitysofttechnologies.com/category/update",
           data: body);
       print(response.data);
-
+      categorymodelll = CategoryList();
       setState(() {
         getcategory();
       });

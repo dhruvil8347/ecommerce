@@ -14,6 +14,8 @@ class _CompanyState extends State<CompanyScreen> {
   @override
   void initState() {
     super.initState();
+    isCheck = true;
+
     getcompany();
   }
 
@@ -22,6 +24,8 @@ class _CompanyState extends State<CompanyScreen> {
   List<Company> comapanyList = [];
   bool isLoding = false;
   bool validate = false;
+  bool isCheck = false;
+  final fromkey = GlobalKey<FormState>();
 
   // List<Re> comapany = [];
   // R view = R.fromJson({});
@@ -40,41 +44,51 @@ class _CompanyState extends State<CompanyScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: TextField(
-              controller: nameCtrl,
-              decoration: InputDecoration(
-                  errorText: validate ? "*required Companyname " : null,
-                  label: const Text("Company Name"),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+            child: Form(
+              key: fromkey,
+              child: TextFormField(
+                validator: (value) {
+                  if (value?.trim().isEmpty ?? false) {
+                    return "*required Companyname ";
+                  }
+                  return null;
+                },
+                controller: nameCtrl,
+                decoration: InputDecoration(
+                    label: const Text("Company Name"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10))),
+              ),
             ),
           ),
           ElevatedButton(
               onPressed: () {
-                setState(() {
-                  nameCtrl.text.isEmpty ? validate = true : validate = false;
-                });
+                print("id->${companyModel.id}");
+                if (fromkey.currentState!.validate()) {
+                  companyModel.companyName = nameCtrl.text.trim();
 
-                if (nameCtrl.text.isNotEmpty) {
-                  addcompany();
+                  if (companyModel.id != 0) {
+                    editcompany(companyModel);
+                  } else {
+                    addcompany();
+                  }
+                  nameCtrl.clear();
                 }
-                nameCtrl.clear();
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(330, 45),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text("ADD")),
+              child: Text(isCheck ? "Add" : "Edit")),
           const SizedBox(
             height: 10,
           ),
-          ElevatedButton(
+          /*ElevatedButton(
               onPressed: () {
                 companyModel.companyName = nameCtrl.text.trim();
                 if (companyModel.id > 0) {
-                  /*  print(companyModel.id);
-                  print(companyModel.companyName);*/
+
                   editcompany(companyModel);
                 }
               },
@@ -82,7 +96,7 @@ class _CompanyState extends State<CompanyScreen> {
                   fixedSize: const Size(330, 45),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
-              child: const Text("UPDATE")),
+              child: const Text("UPDATE")),*/
           const Padding(
             padding: EdgeInsets.only(top: 25, right: 220),
             child: Text("List of companies"),
@@ -207,6 +221,7 @@ class _CompanyState extends State<CompanyScreen> {
         setState(() {
           comapanyList[company.index] = company;
         });
+        companyModel = Company();
       } else {
         throw response.data['m'];
       }
